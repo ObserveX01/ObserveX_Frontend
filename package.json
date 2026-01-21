@@ -1,0 +1,14 @@
+{
+  "name": "observex",
+  "version": "1.0.0",
+  "description": "ObserveX is an AI-powered online examination platform that ensures academic integrity through real-time monitoring and intelligent violation detection. It provides secure exam conduction for students while reducing manual supervision load for teachers and institutions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^19.2.3"
+  }
+}
