@@ -61,8 +61,8 @@ const LandingPage = () => {
                     <span className='bg-obs-mint/20 text-obs-dark px-2 py-0.5 rounded text-[10px] font-bold'>
                       ACTIVE
                     </span>
-                    <h3 className='text-lg font-bold'>Olivia Williams</h3>
-                    <p className='text-xs text-slate-400'>o.williams@testportal.net</p>
+                    <h3 className='text-lg font-bold'>Mahir Faisal</h3>
+                    <p className='text-xs text-slate-400'>mahirfaisal0001@gmail.com</p>
                   </div>
                 </div>
                 <div className='grid grid-cols-2 gap-4'>

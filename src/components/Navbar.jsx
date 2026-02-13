@@ -16,7 +16,7 @@ const Navbar = () => {
       </Link>
 
       <div className='hidden lg:flex items-center gap-10 text-sm font-medium text-white/90'>
-        {["Product", "Who it's for", "Use cases", "Pricing", "Resources"].map((item) => (
+        {["Course", "About"].map((item) => (
           <a key={item} href='#' className='hover:text-obs-mint transition'>
             {item}
           </a>
@@ -24,9 +24,11 @@ const Navbar = () => {
       </div>
 
       <div className='flex items-center gap-4'>
-        <button className='hidden sm:block px-6 py-2.5 text-sm font-bold text-white border border-obs-border bg-obs-border/30 rounded-lg'>
+        <Link
+          to='/login'
+          className='px-6 py-2.5 text-sm font-bold text-obs-dark bg-obs-yellow rounded-lg shadow-lg hover:bg-yellow-400 transition-colors'>
           Login
-        </button>
+        </Link>
 
         {/* Sign up Link */}
         <Link

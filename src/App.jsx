@@ -4,6 +4,7 @@ import SignupPage from "./pages/SignupPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import HelpCenter from "./pages/HelpCenter";
+import LoginPage from "./pages/Login";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path='/terms' element={<TermsPage />} />
         <Route path='/privacy' element={<PrivacyPage />} />
         <Route path='/help' element={<HelpCenter />} />
+        <Route path='/login' element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );
