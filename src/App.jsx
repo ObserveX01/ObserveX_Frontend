@@ -6,6 +6,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import HelpCenter from "./pages/HelpCenter";
 import LoginPage from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/help' element={<HelpCenter />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/about' element={<AboutPage />} />
       </Routes>
     </BrowserRouter>
   );

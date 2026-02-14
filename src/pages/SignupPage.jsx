@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ShieldCheck, AlertCircle, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom"; // 1. Added useNavigate
+import logo from "../assets/logo.png";
 
 const SignupPage = () => {
   const navigate = useNavigate(); // 2. Initialize navigation
@@ -80,9 +81,10 @@ const SignupPage = () => {
     <div className='min-h-screen bg-slate-50 flex flex-col items-center pt-8 px-4 font-sans'>
       {/* Top Logo */}
       <Link to='/' className='flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity'>
-        <div className='bg-[#00c288] p-1 rounded-md'>
+        {/* <div className='bg-[#00c288] p-1 rounded-md'>
           <ShieldCheck className='text-white w-6 h-6' />
-        </div>
+        </div> */}
+        <img src={logo} alt='ObserveX Logo' className='w-10 h-10' />
         <span className='text-2xl font-bold tracking-tight text-slate-800 uppercase'>observeX</span>
       </Link>
 

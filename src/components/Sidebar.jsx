@@ -1,6 +1,7 @@
 import React from "react";
 import { LayoutGrid, Users, BarChart2, User, HelpCircle, LogOut, ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -19,9 +20,10 @@ const Sidebar = () => {
     <aside className='w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full shadow-sm z-50'>
       {/* Brand Logo */}
       <div className='p-6 flex items-center gap-3'>
-        <div className='bg-[#00c288] p-1.5 rounded-lg'>
+        {/* <div className='bg-[#00c288] p-1.5 rounded-lg'>
           <LayoutGrid className='text-white w-5 h-5' />
-        </div>
+        </div> */}
+        <img src={logo} alt='ObserveX Logo' className='w-8 h-8' />
         <span className='text-xl font-bold tracking-tight text-[#004242] uppercase'>observeX</span>
       </div>
 

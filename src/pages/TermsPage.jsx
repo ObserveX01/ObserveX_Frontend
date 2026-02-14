@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
+import logo from "../assets/logo.png";
 
 const TermsPage = () => {
   return (
@@ -9,10 +10,11 @@ const TermsPage = () => {
       <nav className='border-b border-white/10 py-4'>
         <div className='max-w-4xl mx-auto px-6 flex justify-between items-center'>
           <Link to='/' className='flex items-center gap-2'>
-            <div className='bg-obs-mint p-1 rounded'>
+            {/* <div className='bg-obs-mint p-1 rounded'>
               <ShieldCheck className='text-obs-dark w-5 h-5' />
-            </div>
-            <span className='font-bold tracking-tight'>observeX</span>
+            </div> */}
+            <img src={logo} alt='ObserveX Logo' className='w-10 h-10' />
+            <span className='font-bold tracking-tight'>ObserveX</span>
           </Link>
           <Link to='/signup' className='text-sm text-obs-mint hover:underline flex items-center gap-1'>
             <ArrowLeft size={14} /> Back to Sign up
