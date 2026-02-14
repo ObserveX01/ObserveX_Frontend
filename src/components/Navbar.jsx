@@ -21,7 +21,7 @@ const Navbar = () => {
 
         {/* Updated About Link */}
         <Link to='/about' className='hover:text-obs-mint transition'>
-          About
+          About Us
         </Link>
       </div>
 
