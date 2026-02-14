@@ -10,19 +10,51 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Validation
+    // 1. Frontend Validation
     if (!email || !password || !role) {
       setError("Please enter your email, password and select your role.");
       return;
     }
 
-    setError("");
-    console.log("Logging in:", { email, password, role });
-    alert(`Logged in successfully as ${role}!`);
-    // navigate("/dashboard"); // Redirect to dashboard after login
+    try {
+      // 2. Call your ASP.NET Backend API
+      const response = await fetch("http://localhost:5142/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          role: role,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // 3. Success Case
+        setError("");
+        console.log("Login successful:", result);
+
+        // Optional: Save user role/email to localStorage so Dashboard can use it
+        localStorage.setItem("userRole", result.role);
+        localStorage.setItem("userEmail", result.email);
+
+        // Redirect to dashboard
+        navigate("/dashboard");
+      } else {
+        // 4. Backend Validation Error (e.g. Invalid password or wrong role)
+        setError(result.message || "Invalid login credentials.");
+      }
+    } catch (err) {
+      // 5. Network Error
+      console.error("Login error:", err);
+      setError("Cannot connect to server. Is the backend running?");
+    }
   };
 
   return (

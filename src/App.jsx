@@ -5,6 +5,7 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import HelpCenter from "./pages/HelpCenter";
 import LoginPage from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/privacy' element={<PrivacyPage />} />
         <Route path='/help' element={<HelpCenter />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

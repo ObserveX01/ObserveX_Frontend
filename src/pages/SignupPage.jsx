@@ -128,9 +128,6 @@ const SignupPage = () => {
                   error && (phone.length !== 11 || !phone.startsWith("01")) ? "border-red-500" : "border-slate-200"
                 } focus:outline-none focus:border-[#00c288] transition-colors`}
               />
-              <p className='text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider'>
-                Must be 11 digits starting with 01
-              </p>
             </div>
 
             {/* Password Field */}
