@@ -15,7 +15,7 @@ const SignupPage = () => {
   // State for error handling
   const [error, setError] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     // 1. Check for empty fields
@@ -24,7 +24,7 @@ const SignupPage = () => {
       return;
     }
 
-    // 2. Phone Number Validation (Starts with 01 and exactly 11 digits)
+    // 2. Phone Number Validation
     const phoneRegex = /^01\d{9}$/;
     if (!phoneRegex.test(phone)) {
       setError("Phone number must start with 01 and be exactly 11 digits long.");
@@ -37,21 +37,43 @@ const SignupPage = () => {
       return;
     }
 
-    // 4. Agreement Validation
+    // 4. Agreement Validation (THIS IS WHAT YOU ASKED FOR)
     if (!agreed) {
       setError("You must agree to the Terms & Conditions and Privacy Policy.");
-      return;
+      return; // This stops the code from reaching the fetch call
     }
 
-    // SUCCESS CASE
+    // If all checks pass, clear error and call API
     setError("");
-    console.log("Form submitted successfully:", { email, phone, password, role, agreed });
 
-    // Optional: Show alert before redirecting
-    alert(`Signup successful for ${email}! Redirecting to login...`);
+    const signupData = {
+      email: email,
+      phoneNumber: phone,
+      password: password,
+      role: role,
+    };
 
-    // 3. Redirect to Login Page
-    navigate("/login");
+    try {
+      const response = await fetch("http://localhost:5142/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`Signup successful! Redirecting to login...`);
+        navigate("/login");
+      } else {
+        setError(result.message || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError("Cannot connect to server. Is the backend running?");
+    }
   };
 
   return (
