@@ -146,7 +146,7 @@ const AboutPage = () => {
 
           <h2 className='text-3xl font-bold text-[#004242] text-center mb-16'>Company details</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10'>
-            <FooterItem icon={<Building2 className='text-[#004242]' />} text='ObserveX Sp. z o.o.' />
+            <FooterItem icon={<Building2 className='text-[#004242]' />} text='ObserveX' />
             <FooterItem
               icon={<MapPin className='text-[#004242]' />}
               text='Plot 3/B, Road 111, Gulshan-2, Dhaka-1212, Bangladesh'
