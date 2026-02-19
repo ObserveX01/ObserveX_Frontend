@@ -37,7 +37,7 @@ const Sidebar = () => {
         />
         <SidebarLink icon={<Users size={20} />} label='Respondents' />
         <SidebarLink icon={<BarChart2 size={20} />} label='Results database' />
-        <SidebarLink icon={<User size={20} />} label='My account' />
+        <SidebarLink icon={<User size={20} />} label='My account' onClick={() => navigate("/account")} />
       </nav>
 
       {/* Bottom Navigation Items */}
