@@ -151,7 +151,7 @@ const AccountPage = () => {
 
           <div className='mt-6 text-center'>
             <button className='flex items-center gap-2 text-red-700 font-bold text-sm mx-auto hover:underline'>
-              <IdCard size={18} /> Regarding Student ID Card
+              <IdCard size={18} /> Regarding ID Card
             </button>
             <p className='text-[12px] text-slate-400 mt-2 px-4 italic'>
               You're not eligible to request an ID card at this time.
