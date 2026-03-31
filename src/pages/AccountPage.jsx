@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/Sidebar";
-import { User, Pencil, IdCard } from "lucide-react";
+import { User, Pencil, IdCard, X } from "lucide-react"; // X আইকন যোগ করা হয়েছে
+import { motion, AnimatePresence } from "framer-motion"; // এনিমেশনের জন্য
 
 const AccountPage = () => {
   const userEmail = sessionStorage.getItem("userEmail");
@@ -19,22 +20,18 @@ const AccountPage = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [isViewOpen, setIsViewOpen] = useState(false); // ছবি দেখার জন্য নতুন স্টেট
 
-  // --- SINGLE CONSOLIDATED FETCH LOGIC ---
-  // This runs on page refresh and every time the component loads
   useEffect(() => {
     const fetchProfile = async () => {
       if (!userEmail) {
         setLoading(false);
         return;
       }
-
       try {
         const res = await fetch(`http://localhost:5142/api/profile/${userEmail}`);
         if (res.ok) {
           const data = await res.json();
-
-          // Set all data into state, including the image filename from DB
           setFormData({
             email: data.email || userEmail,
             phoneNumber: data.phoneNumber || "",
@@ -53,11 +50,9 @@ const AccountPage = () => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, [userEmail]);
 
-  // Handle Profile Update (Text fields)
   const handleUpdate = async () => {
     try {
       const res = await fetch("http://localhost:5142/api/profile/update", {
@@ -65,40 +60,28 @@ const AccountPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      if (res.ok) {
-        alert("Profile Updated Successfully!");
-      } else {
-        alert("Failed to update profile.");
-      }
+      if (res.ok) alert("Profile Updated Successfully!");
+      else alert("Failed to update profile.");
     } catch (err) {
-      console.error("Update error", err);
       alert("Update failed - check server connection");
     }
   };
 
-  // Handle Image Upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const uploadData = new FormData();
     uploadData.append("file", file);
     uploadData.append("email", userEmail);
-
     try {
       const res = await fetch("http://localhost:5142/api/profile/upload-image", {
         method: "POST",
         body: uploadData,
       });
-
       if (res.ok) {
         const data = await res.json();
-        // Update local state with the new filename immediately
         setFormData((prev) => ({ ...prev, profilePicture: data.fileName }));
         alert("Profile picture updated!");
-      } else {
-        alert("Upload failed.");
       }
     } catch (err) {
       console.error("Upload error", err);
@@ -113,19 +96,47 @@ const AccountPage = () => {
     <div className='flex min-h-screen bg-slate-50 font-sans'>
       <Sidebar />
 
-      <main className='flex-1 ml-64 p-12 flex flex-col lg:flex-row gap-8'>
+      <main className='flex-1 ml-64 p-12 flex flex-col lg:flex-row gap-8 relative'>
+        {/* --- IMAGE VIEW MODAL (Lightbox) --- */}
+        <AnimatePresence>
+          {isViewOpen && formData.profilePicture && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsViewOpen(false)}
+              className='fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out'>
+              <button
+                className='absolute top-10 right-10 text-white hover:text-red-500 transition-colors'
+                onClick={() => setIsViewOpen(false)}>
+                <X size={40} />
+              </button>
+              <motion.img
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.8 }}
+                src={`http://localhost:5142/uploads/${formData.profilePicture}`}
+                alt='Full View'
+                className='max-w-full max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white/10'
+                onClick={(e) => e.stopPropagation()} // ছবি ক্লিক করলে যেন বন্ধ না হয়
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* LEFT CARD: Profile Summary */}
         <div className='w-full lg:w-80 flex flex-col items-center'>
           <div className='bg-white p-8 rounded-xl border border-slate-100 shadow-sm w-full text-center'>
-            <div className='relative w-32 h-32 mx-auto mb-4'>
-              <div className='w-full h-full bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200'>
+            <div className='relative w-32 h-32 mx-auto mb-4 group'>
+              <div
+                className={`w-full h-full bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 ${formData.profilePicture ? "cursor-zoom-in" : ""}`}
+                onClick={() => formData.profilePicture && setIsViewOpen(true)} // এখানে ক্লিক করলে ভিউ ওপেন হবে
+              >
                 {formData.profilePicture ? (
                   <img
-                    // Pointing to the backend uploads folder
                     src={`http://localhost:5142/uploads/${formData.profilePicture}`}
                     alt='Profile'
-                    className='w-full h-full object-cover'
-                    // The 'key' ensures React re-renders when picture changes
+                    className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                     key={formData.profilePicture}
                   />
                 ) : (

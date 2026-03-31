@@ -26,6 +26,7 @@ import StudentResults from "./pages/StudentResults";
 import CurrentActivities from "./pages/CurrentActivities";
 import ReviewExam from "./pages/ReviewExam";
 import ResultsDatabase from "./pages/ResultsDatabase";
+import KnowledgeBase from "./pages/KnowledgeBase";
 
 /**
  * ProtectedRoute:
@@ -229,6 +230,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path='/docs' element={<KnowledgeBase />} />
 
         {/* ভুল ইউআরএল হ্যান্ডলিং */}
         <Route path='*' element={<Navigate to='/' replace />} />

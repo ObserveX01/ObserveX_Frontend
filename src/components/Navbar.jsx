@@ -16,7 +16,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className='hidden lg:flex items-center gap-10 text-sm font-bold text-white/90'>
         <Link to='/' className='hover:text-obs-mint transition'>
-          Course
+          Home
         </Link>
 
         {/* Updated About Link */}
