@@ -1,63 +1,78 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { BarChart2, Star, Users, BookOpen, X, Mail, Calendar, CheckCircle } from "lucide-react";
+import { BarChart2, Star, Users, BookOpen, X, Mail, Calendar, CheckCircle, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion"; // এনিমেশনের জন্য এটি ব্যবহার করা ভালো
 
 const ResultsDatabase = () => {
   const [data, setData] = useState([]); // গ্রাফ এবং কার্ডের ডাটা
-  const [allResults, setAllResults] = useState([]); // সব রিল্ট ডাটাবেস থেকে
+  const [allResults, setAllResults] = useState([]); // সব রেজাল্ট ডাটাবেস থেকে
   const [loading, setLoading] = useState(true);
   const [selectedTeacher, setSelectedTeacher] = useState(null); // ক্লিক করা টিচারের জন্য স্টেট
 
   useEffect(() => {
-    // --- ১. ডাটা ফেচ এবং প্রসেসিং লজিক (আপনার অরিজিনাল কোড) ---
+    // --- ১. ডাটা ফেচ এবং গার্বেজ ফিল্টারিং লজিক (আপডেটেড) ---
     fetch("http://localhost:5142/api/results/all")
       .then((res) => res.json())
       .then((results) => {
-        setAllResults(results); // অরিজিনাল ডাটা সেভ রাখা হচ্ছে
+        // যদি ব্যাকএন্ড থেকে ডাটা না আসে
+        if (!results || results.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        setAllResults(results);
 
         const teacherStats = {};
         results.forEach((r) => {
-          if (!teacherStats[r.teacherName]) {
-            teacherStats[r.teacherName] = { name: r.teacherName, totalScore: 0, count: 0, students: new Set() };
+          // গার্বেজ ভ্যালু চেক: যদি টিচারের নাম বা কোর্স ইনফো ইনভ্যালিড থাকে তবে বাদ দিবে
+          if (r.teacherName && r.teacherName !== "NULL" && r.courseName) {
+            if (!teacherStats[r.teacherName]) {
+              teacherStats[r.teacherName] = {
+                name: r.teacherName,
+                totalScore: 0,
+                count: 0,
+                students: new Set(),
+                courses: new Set(),
+              };
+            }
+            teacherStats[r.teacherName].totalScore += r.percentage || r.Percentage || 0;
+            teacherStats[r.teacherName].count += 1;
+            teacherStats[r.teacherName].students.add(r.studentEmail || r.StudentEmail);
+            teacherStats[r.teacherName].courses.add(r.courseName || r.CourseName);
           }
-          teacherStats[r.teacherName].totalScore += r.percentage;
-          teacherStats[r.teacherName].count += 1;
-          teacherStats[r.teacherName].students.add(r.studentEmail);
         });
 
         const chartData = Object.values(teacherStats).map((t) => ({
           name: t.name,
           avgScore: Math.round(t.totalScore / t.count),
           studentCount: t.students.size,
+          // টিচার রেটিং ক্যালকুলেশন (স্কোর অনুযায়ী ৫ এর মধ্যে)
           rating: (t.totalScore / t.count / 20).toFixed(1),
         }));
 
         setData(chartData);
         setLoading(false);
       })
-      .catch((err) => console.error("Error fetching admin data:", err));
+      .catch((err) => {
+        console.error("Error fetching admin data:", err);
+        setLoading(false);
+      });
 
-    // --- ২. ব্যাক বাটন ট্র্যাপ লজিক (নতুন সংযোজন) ---
-    // ব্রাউজারের হিস্ট্রি স্ট্যাকে একটি ফেক স্টেট পুশ করা
+    // --- ২. ব্যাক বাটন ট্র্যাপ লজিক ---
     window.history.pushState(null, null, window.location.href);
-
     const handleBackButton = (event) => {
-      // ইউজার যখনই ব্যাক বাটন চাপবে, তাকে জোর করে আবার এই বর্তমান পেজেই ফিরিয়ে আনা হবে
       window.history.pushState(null, null, window.location.href);
     };
-
-    // পপ-স্টেট ইভেন্ট লিসেন করা
     window.addEventListener("popstate", handleBackButton);
 
-    // কম্পোনেন্ট আনমাউন্ট হওয়ার সময় লিসেনারটি রিমুভ করা (Memory Leak রোধ করতে)
     return () => {
       window.removeEventListener("popstate", handleBackButton);
     };
-  }, []); // Empty array নিশ্চিত করে এটি শুধুমাত্র একবার রান হবে
+  }, []);
 
   // টিচারের আন্ডারে থাকা স্টুডেন্টদের ফিল্টার করার লজিক
-  const teacherDetails = allResults.filter((r) => r.teacherName === selectedTeacher?.name);
+  const teacherDetails = allResults.filter((r) => (r.teacherName || r.TeacherName) === selectedTeacher?.name);
 
   return (
     <div className='flex min-h-screen bg-[#f8fafc] font-sans'>
@@ -71,19 +86,26 @@ const ResultsDatabase = () => {
             </div>
             <div>
               <h1 className='text-3xl font-black text-slate-800 uppercase tracking-tighter'>Global Analytics</h1>
-              <p className='text-slate-500 font-medium'>Performance tracking across all instructors</p>
+              <p className='text-slate-500 font-medium font-sans'>Performance tracking across active instructors</p>
             </div>
           </div>
 
           {/* Graph Section */}
           <div className='bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 mb-10'>
-            <h3 className='text-lg font-bold text-slate-800 mb-8'>Performance Overview</h3>
+            <h3 className='text-lg font-bold text-slate-800 mb-8 flex items-center gap-2'>
+              <CheckCircle size={20} className='text-[#00c288]' /> Performance Overview (Avg Score)
+            </h3>
             <div className='h-[300px] w-full'>
               <ResponsiveContainer width='100%' height='100%'>
                 <BarChart data={data}>
                   <CartesianGrid strokeDasharray='3 3' vertical={false} stroke='#f1f5f9' />
-                  <XAxis dataKey='name' axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 12 }} />
-                  <YAxis unit='%' axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 12 }} />
+                  <XAxis
+                    dataKey='name'
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: "bold" }}
+                  />
+                  <YAxis unit='%' axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 10 }} />
                   <Tooltip
                     cursor={{ fill: "#f8fafc" }}
                     contentStyle={{
@@ -92,9 +114,9 @@ const ResultsDatabase = () => {
                       boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
                     }}
                   />
-                  <Bar dataKey='avgScore' radius={[10, 10, 0, 0]} barSize={50}>
+                  <Bar dataKey='avgScore' radius={[10, 10, 0, 0]} barSize={45}>
                     {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.avgScore > 50 ? "#00c288" : "#6366f1"} />
+                      <Cell key={`cell-${index}`} fill={entry.avgScore > 60 ? "#00c288" : "#6366f1"} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -135,22 +157,18 @@ const ResultsDatabase = () => {
           </div>
         </div>
 
-        {/* --- STUDENT LIST MODAL --- */}
+        {/* --- STUDENT LIST MODAL WITH DETAILED DATA --- */}
         <AnimatePresence>
           {selectedTeacher && (
             <div className='fixed inset-0 z-[100] flex items-center justify-center p-6'>
-              {/* Backdrop */}
               <div
                 className='absolute inset-0 bg-slate-900/60 backdrop-blur-sm'
                 onClick={() => setSelectedTeacher(null)}></div>
-
-              {/* Modal Box */}
-              <div className='relative bg-white w-full max-w-4xl max-h-[80vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col'>
-                {/* Modal Header */}
+              <div className='relative bg-white w-full max-w-5xl max-h-[85vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col'>
                 <div className='p-8 bg-slate-900 text-white flex justify-between items-center'>
                   <div>
                     <h2 className='text-2xl font-black uppercase tracking-tight'>{selectedTeacher.name}'s Students</h2>
-                    <p className='text-slate-400 text-sm'>List of students who attended exams under this instructor</p>
+                    <p className='text-slate-400 text-sm'>Full list of student performance under this instructor</p>
                   </div>
                   <button
                     onClick={() => setSelectedTeacher(null)}
@@ -159,7 +177,6 @@ const ResultsDatabase = () => {
                   </button>
                 </div>
 
-                {/* Modal Content - Table */}
                 <div className='flex-1 overflow-y-auto p-8'>
                   <table className='w-full text-left border-collapse'>
                     <thead>
@@ -174,28 +191,25 @@ const ResultsDatabase = () => {
                     </thead>
                     <tbody className='divide-y divide-slate-50'>
                       {teacherDetails.map((res, i) => {
-                        // ডাটা প্রসেসিং
-                        const name = res.studentName || res.StudentName;
+                        const name = res.studentName || res.StudentName || "NULL";
                         const email = res.studentEmail || res.StudentEmail || "N/A";
+                        const percentage = res.percentage || res.Percentage || 0;
 
                         return (
-                          <tr key={i} className='hover:bg-slate-50 transition-colors'>
+                          <tr key={i} className='hover:bg-slate-50 transition-colors group'>
                             <td className='py-4 px-2'>
                               <div className='flex items-center gap-3'>
-                                {/* Avatar - NULL হলে লাল রঙ দেখাবে */}
                                 <div
                                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px] ${name === "NULL" ? "bg-red-100 text-red-500" : "bg-slate-100 text-slate-500"}`}>
                                   {name === "NULL" ? "?" : name.charAt(0)}
                                 </div>
-                                {/* নাম - NULL হলে ইটালিক এবং লাল দেখাবে */}
                                 <span
-                                  className={`font-bold ${name === "NULL" ? "text-red-500 italic text-sm" : "text-slate-800"}`}>
+                                  className={`font-bold ${name === "NULL" ? "text-red-500 italic" : "text-slate-800"}`}>
                                   {name}
                                 </span>
                               </div>
                             </td>
                             <td className='py-4 px-2 text-sm text-slate-500 font-medium italic'>{email}</td>
-                            {/* বাকি কলামগুলো (Course, Score, Percentage) আগের মতোই থাকবে... */}
                             <td className='py-4 px-2 text-sm font-semibold text-slate-700'>
                               {res.courseName || res.CourseName}
                             </td>
@@ -203,11 +217,12 @@ const ResultsDatabase = () => {
                               {res.score ?? res.Score} / {res.totalQuestions ?? res.TotalQuestions}
                             </td>
                             <td className='py-4 px-2 text-center'>
-                              <span className='px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-600'>
-                                {Math.round(res.percentage || res.Percentage)}%
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-black ${percentage > 70 ? "bg-emerald-100 text-emerald-600" : "bg-indigo-100 text-indigo-600"}`}>
+                                {Math.round(percentage)}%
                               </span>
                             </td>
-                            <td className='py-4 px-2 text-right text-xs text-slate-400'>
+                            <td className='py-4 px-2 text-right text-xs text-slate-400 font-medium'>
                               {new Date(res.examDate || res.ExamDate).toLocaleDateString()}
                             </td>
                           </tr>
@@ -217,10 +232,9 @@ const ResultsDatabase = () => {
                   </table>
                 </div>
 
-                {/* Modal Footer */}
                 <div className='p-6 bg-slate-50 border-t border-slate-100 flex justify-center'>
                   <p className='text-[10px] font-black text-slate-400 uppercase tracking-widest'>
-                    Total Submissions: {teacherDetails.length}
+                    Total Valid Entries: {teacherDetails.length}
                   </p>
                 </div>
               </div>
@@ -231,8 +245,5 @@ const ResultsDatabase = () => {
     </div>
   );
 };
-
-// Simple AnimatePresence polyfill wrapper if not using framer-motion
-const AnimatePresence = ({ children }) => <>{children}</>;
 
 export default ResultsDatabase;

@@ -46,19 +46,21 @@ const MyQuestionsPage = () => {
     }
   };
 
-  // কোয়েশ্চেন ডিলিট করা (New Function)
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this question?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this question? This will also remove any student records for this specific question.",
+      )
+    ) {
       try {
         const res = await fetch(`http://localhost:5142/api/questions/${id}`, {
           method: "DELETE",
         });
 
         if (res.ok) {
+          // UI থেকে সাথে সাথে রিমুভ করা
           setQuestions(questions.filter((q) => q.id !== id));
-          alert("Question deleted!");
-        } else {
-          alert("Failed to delete the question.");
+          alert("Question and associated data erased!");
         }
       } catch (err) {
         console.error("Delete failed", err);
