@@ -9,6 +9,7 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import HelpCenter from "./pages/HelpCenter";
 import AboutPage from "./pages/AboutPage";
+import ViolationPage from "./pages/ViolationPage";
 
 // Private (Protected) Pages
 import Dashboard from "./pages/Dashboard";
@@ -36,7 +37,7 @@ import KnowledgeBase from "./pages/KnowledgeBase";
 const ProtectedRoute = ({ children }) => {
   const token = sessionStorage.getItem("token");
   if (!token) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
 };
@@ -52,12 +53,12 @@ const PublicRoute = ({ children }) => {
 
   if (token) {
     if (userRole === "Admin") {
-      return <Navigate to='/results-database' replace />;
+      return <Navigate to="/results-database" replace />;
     }
     if (userRole === "Teacher") {
-      return <Navigate to='/course-questions' replace />;
+      return <Navigate to="/course-questions" replace />;
     }
-    return <Navigate to='/dashboard' replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return children;
 };
@@ -70,7 +71,7 @@ const PublicRoute = ({ children }) => {
 const DashboardRedirect = () => {
   const userRole = sessionStorage.getItem("userRole");
   if (userRole === "Admin") {
-    return <Navigate to='/results-database' replace />;
+    return <Navigate to="/results-database" replace />;
   }
   return <Dashboard />;
 };
@@ -81,7 +82,7 @@ function App() {
       <Routes>
         {/* --- পাবলিক রাউটস (লগইন থাকলে রিডাইরেক্ট হবে) --- */}
         <Route
-          path='/'
+          path="/"
           element={
             <PublicRoute>
               <LandingPage />
@@ -89,7 +90,7 @@ function App() {
           }
         />
         <Route
-          path='/login'
+          path="/login"
           element={
             <PublicRoute>
               <LoginPage />
@@ -97,7 +98,7 @@ function App() {
           }
         />
         <Route
-          path='/signup'
+          path="/signup"
           element={
             <PublicRoute>
               <SignupPage />
@@ -106,16 +107,16 @@ function App() {
         />
 
         {/* --- সাধারণ পেজ --- */}
-        <Route path='/terms' element={<TermsPage />} />
-        <Route path='/privacy' element={<PrivacyPage />} />
-        <Route path='/help' element={<HelpCenter />} />
-        <Route path='/about' element={<AboutPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/help" element={<HelpCenter />} />
+        <Route path="/about" element={<AboutPage />} />
 
         {/* --- প্রোটেক্টেড রাউটস (লগইন থাকা বাধ্যতামূলক) --- */}
 
         {/* ড্যাশবোর্ড (অ্যাডমিন হলে অটোমেটিক Results Database এ যাবে) */}
         <Route
-          path='/dashboard'
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <DashboardRedirect />
@@ -125,7 +126,7 @@ function App() {
 
         {/* অ্যাডমিন এনালাইসিস পেজ */}
         <Route
-          path='/results-database'
+          path="/results-database"
           element={
             <ProtectedRoute>
               <ResultsDatabase />
@@ -135,7 +136,7 @@ function App() {
 
         {/* স্টুডেন্ট অ্যাক্টিভিটি পেজ */}
         <Route
-          path='/current-activities'
+          path="/current-activities"
           element={
             <ProtectedRoute>
               <CurrentActivities />
@@ -145,7 +146,7 @@ function App() {
 
         {/* উত্তর রিভিউ করার পেজ */}
         <Route
-          path='/review-exam/:resultId'
+          path="/review-exam/:resultId"
           element={
             <ProtectedRoute>
               <ReviewExam />
@@ -155,7 +156,7 @@ function App() {
 
         {/* টিচার ও স্টুডেন্টদের জন্য একাউন্ট পেজ */}
         <Route
-          path='/account'
+          path="/account"
           element={
             <ProtectedRoute>
               <AccountPage />
@@ -165,7 +166,7 @@ function App() {
 
         {/* টিচার স্পেশাল রাউটস */}
         <Route
-          path='/create-question'
+          path="/create-question"
           element={
             <ProtectedRoute>
               <CreateQuestionPage />
@@ -173,7 +174,7 @@ function App() {
           }
         />
         <Route
-          path='/question-types'
+          path="/question-types"
           element={
             <ProtectedRoute>
               <QuestionTypesPage />
@@ -181,7 +182,7 @@ function App() {
           }
         />
         <Route
-          path='/my-questions'
+          path="/my-questions"
           element={
             <ProtectedRoute>
               <MyQuestionsPage />
@@ -189,7 +190,7 @@ function App() {
           }
         />
         <Route
-          path='/create-multiple-choice'
+          path="/create-multiple-choice"
           element={
             <ProtectedRoute>
               <EditorPage />
@@ -197,7 +198,7 @@ function App() {
           }
         />
         <Route
-          path='/course-questions'
+          path="/course-questions"
           element={
             <ProtectedRoute>
               <CourseQuestionsPage />
@@ -205,7 +206,7 @@ function App() {
           }
         />
         <Route
-          path='/student-results'
+          path="/student-results"
           element={
             <ProtectedRoute>
               <StudentResults />
@@ -215,7 +216,7 @@ function App() {
 
         {/* এক্সাম রাউটস */}
         <Route
-          path='/course/:courseName'
+          path="/course/:courseName"
           element={
             <ProtectedRoute>
               <CourseDetailsPage />
@@ -223,7 +224,7 @@ function App() {
           }
         />
         <Route
-          path='/exam-preview/:courseName'
+          path="/exam-preview/:courseName"
           element={
             <ProtectedRoute>
               <ExamPage />
@@ -231,10 +232,12 @@ function App() {
           }
         />
 
-        <Route path='/docs' element={<KnowledgeBase />} />
+        <Route path="/violations" element={<ViolationPage />} />
+
+        <Route path="/docs" element={<KnowledgeBase />} />
 
         {/* ভুল ইউআরএল হ্যান্ডলিং */}
-        <Route path='*' element={<Navigate to='/' replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

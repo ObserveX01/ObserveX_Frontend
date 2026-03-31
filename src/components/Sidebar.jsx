@@ -11,7 +11,8 @@ import {
   List, // Icon for My Question
   BookOpenCheck,
   History, // Icon for Current Activities
-  ClipboardCheck, // New Icon for Student Results
+  ClipboardCheck,
+  ShieldAlert, // New Icon for Student Results
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -48,20 +49,25 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className='w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full shadow-sm z-50'>
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full shadow-sm z-50">
       {/* Brand Logo - ক্লিকেবল এবং টিচারদের জন্য Course Question এ রিডাইরেক্ট হবে */}
-      <div className='p-6 flex items-center gap-3 cursor-pointer hover:opacity-80' onClick={handleLogoClick}>
-        <img src={logo} alt='ObserveX Logo' className='w-8 h-8' />
-        <span className='text-xl font-bold tracking-tight text-[#004242] uppercase'>observeX</span>
+      <div
+        className="p-6 flex items-center gap-3 cursor-pointer hover:opacity-80"
+        onClick={handleLogoClick}
+      >
+        <img src={logo} alt="ObserveX Logo" className="w-8 h-8" />
+        <span className="text-xl font-bold tracking-tight text-[#004242] uppercase">
+          observeX
+        </span>
       </div>
 
       {/* Main Navigation Items */}
-      <nav className='flex-1 px-3 mt-4'>
+      <nav className="flex-1 px-3 mt-4">
         {/* --- ১. My Tests - শুধুমাত্র Student দেখবে --- */}
         {userRole === "Student" && (
           <SidebarLink
             icon={<LayoutGrid size={20} />}
-            label='My tests'
+            label="My tests"
             active={location.pathname === "/dashboard"}
             onClick={() => navigate("/dashboard")}
           />
@@ -71,7 +77,7 @@ const Sidebar = () => {
         {userRole === "Student" && (
           <SidebarLink
             icon={<History size={20} />}
-            label='Current Activities'
+            label="Current Activities"
             active={location.pathname === "/current-activities"}
             onClick={() => navigate("/current-activities")}
           />
@@ -82,27 +88,27 @@ const Sidebar = () => {
           <>
             <SidebarLink
               icon={<ClipboardCheck size={20} />}
-              label='Student Results'
+              label="Student Results"
               active={location.pathname === "/student-results"}
               onClick={() => navigate("/student-results")}
             />
 
             <SidebarLink
               icon={<PlusSquare size={20} />}
-              label='Create Question'
+              label="Create Question"
               active={location.pathname === "/create-question"}
               onClick={() => navigate("/create-question")}
             />
             <SidebarLink
               icon={<List size={20} />}
-              label='My Question'
+              label="My Question"
               active={location.pathname === "/my-questions"}
               onClick={() => navigate("/my-questions")}
             />
             {/* টিচারদের মেইন পেজ বাটন */}
             <SidebarLink
               icon={<BookOpenCheck size={20} />}
-              label='Course Question'
+              label="Course Question"
               active={location.pathname === "/course-questions"}
               onClick={() => navigate("/course-questions")}
             />
@@ -111,19 +117,29 @@ const Sidebar = () => {
 
         {/* --- ৪. Admin Only Navigation --- */}
         {userRole === "Admin" && (
-          <SidebarLink
-            icon={<BarChart2 size={20} />}
-            label='Results Database'
-            active={location.pathname === "/results-database"}
-            onClick={() => navigate("/results-database")}
-          />
+          <>
+            <SidebarLink
+              icon={<BarChart2 size={20} />}
+              label="Results Database"
+              active={location.pathname === "/results-database"}
+              onClick={() => navigate("/results-database")}
+            />
+
+            {/* 🔥 NEW: Violation Logs */}
+            <SidebarLink
+              icon={<ShieldAlert size={20} />}
+              label="Violation Logs"
+              active={location.pathname === "/violations"}
+              onClick={() => navigate("/violations")}
+            />
+          </>
         )}
 
         {/* --- ৫. My Account - Admin ছাড়া সবার জন্য --- */}
         {userRole !== "Admin" && (
           <SidebarLink
             icon={<User size={20} />}
-            label='My account'
+            label="My account"
             active={location.pathname === "/account"}
             onClick={() => navigate("/account")}
           />
@@ -131,16 +147,20 @@ const Sidebar = () => {
       </nav>
 
       {/* Bottom Navigation Items */}
-      <div className='px-3 pb-6 border-t border-slate-100 pt-4'>
+      <div className="px-3 pb-6 border-t border-slate-100 pt-4">
         <SidebarLink
           icon={<HelpCircle size={20} />}
-          label='Help'
+          label="Help"
           active={location.pathname === "/help"}
           onClick={() => navigate("/help")}
         />
 
         {/* Sign Out Button */}
-        <SidebarLink icon={<LogOut size={20} />} label='Sign out' onClick={handleLogout} />
+        <SidebarLink
+          icon={<LogOut size={20} />}
+          label="Sign out"
+          onClick={handleLogout}
+        />
       </div>
     </aside>
   );
@@ -159,9 +179,12 @@ const SidebarLink = ({ icon, label, active = false, onClick }) => (
           ? "bg-emerald-50 text-emerald-600 font-semibold shadow-sm"
           : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
       }
-    `}>
-    <span className={active ? "text-emerald-600" : "text-slate-400"}>{icon}</span>
-    <span className='text-sm'>{label}</span>
+    `}
+  >
+    <span className={active ? "text-emerald-600" : "text-slate-400"}>
+      {icon}
+    </span>
+    <span className="text-sm">{label}</span>
   </div>
 );
 
