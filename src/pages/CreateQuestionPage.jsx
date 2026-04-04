@@ -21,7 +21,17 @@ const CreateQuestionPage = () => {
     <div className='flex min-h-screen bg-white font-sans overflow-x-hidden'>
       <Sidebar />
 
-     
+      <main className='flex-1 ml-64 p-8 flex flex-col items-center justify-center'>
+        <div className='max-w-5xl w-full space-y-8'>
+          {/* --- SECTION 1: UPLOAD BOX (UNAVAILABLE) --- */}
+          <div className='group relative border-2 border-dashed border-slate-200 rounded-[2.5rem] py-16 px-12 bg-white cursor-not-allowed overflow-hidden'>
+            {/* HOVER OVERLAY */}
+            <div className='absolute inset-0 bg-slate-50/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10'>
+              <div className='bg-slate-800 text-white px-5 py-2 rounded-full flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform'>
+                <Lock size={16} />
+                <span className='text-sm font-bold'>Currently Unavailable</span>
+              </div>
+            </div>
 
             {/* CONTENT (GREYED OUT) */}
             <div className='flex flex-col items-center opacity-40 transition-opacity group-hover:opacity-20'>
@@ -45,18 +55,6 @@ const CreateQuestionPage = () => {
             </div>
           </div>
 
-           <main className='flex-1 ml-64 p-8 flex flex-col items-center justify-center'>
-        <div className='max-w-5xl w-full space-y-8'>
-          {/* --- SECTION 1: UPLOAD BOX (UNAVAILABLE) --- */}
-          <div className='group relative border-2 border-dashed border-slate-200 rounded-[2.5rem] py-16 px-12 bg-white cursor-not-allowed overflow-hidden'>
-            {/* HOVER OVERLAY */}
-            <div className='absolute inset-0 bg-slate-50/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10'>
-              <div className='bg-slate-800 text-white px-5 py-2 rounded-full flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform'>
-                <Lock size={16} />
-                <span className='text-sm font-bold'>Currently Unavailable</span>
-              </div>
-            </div>
-
           {/* --- SECTION 2: THREE BOTTOM CARDS --- */}
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             {/* Card 1: Prompt (UNAVAILABLE) */}
@@ -68,18 +66,6 @@ const CreateQuestionPage = () => {
                   <span className='text-xs font-bold'>Currently Unavailable</span>
                 </div>
               </div>
-
-               <main className='flex-1 ml-64 p-8 flex flex-col items-center justify-center'>
-        <div className='max-w-5xl w-full space-y-8'>
-          {/* --- SECTION 1: UPLOAD BOX (UNAVAILABLE) --- */}
-          <div className='group relative border-2 border-dashed border-slate-200 rounded-[2.5rem] py-16 px-12 bg-white cursor-not-allowed overflow-hidden'>
-            {/* HOVER OVERLAY */}
-            <div className='absolute inset-0 bg-slate-50/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10'>
-              <div className='bg-slate-800 text-white px-5 py-2 rounded-full flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform'>
-                <Lock size={16} />
-                <span className='text-sm font-bold'>Currently Unavailable</span>
-              </div>
-            </div>
 
               <div className='flex justify-between items-start opacity-40 group-hover:opacity-10 transition-opacity'>
                 <h3 className='font-bold text-slate-600 text-lg leading-tight'>

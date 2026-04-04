@@ -3,16 +3,11 @@ import Sidebar from "../components/Sidebar";
 import { Search, BookOpen, Layers, UserCircle, ArrowRight } from "lucide-react"; // Added UserCircle
 import { useNavigate } from "react-router-dom";
 
-import Sidebar from "../components/Sidebar";
-import { ArrowLeft, CheckCircle2, Clock, Star } from "lucide-react"
-
-
-
-  const CourseDetailsPage = () => {
-  const { courseName } = useParams(); // URL থেকে কোর্সের নাম নিবে
-  const navigate = useNavigate();
-  const [questions, setQuestions] = useState([]);
+const CourseQuestionsPage = () => {
+  const [courses, setCourses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const teacherEmail = sessionStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:5142/api/questions/${teacherEmail}`)
@@ -37,7 +32,14 @@ import { ArrowLeft, CheckCircle2, Clock, Star } from "lucide-react"
       window.history.pushState(null, null, window.location.href);
     };
 
-  
+    // ব্রাউজারের popstate ইভেন্ট লিসেন করা
+    window.addEventListener("popstate", handleBackButton);
+
+    // কম্পোনেন্ট আনমাউন্ট হলে লিসেনার রিমুভ করা
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [teacherEmail]);
 
   const filteredCourses = courses.filter(([name]) => name.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -52,15 +54,6 @@ import { ArrowLeft, CheckCircle2, Clock, Star } from "lucide-react"
               className='absolute left-4 top-3.5 text-slate-400 group-focus-within:text-red-500 transition-colors'
               size={20}
             />
-
-              // ব্রাউজারের popstate ইভেন্ট লিসেন করা
-    window.addEventListener("popstate", handleBackButton);
-
-    // কম্পোনেন্ট আনমাউন্ট হলে লিসেনার রিমুভ করা
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, [teacherEmail]);
             <input
               type='text'
               placeholder='Search Your Course...'
