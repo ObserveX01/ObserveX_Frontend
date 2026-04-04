@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import { ArrowLeft, CheckCircle2, Clock, Star } from "lucide-react";
+;
 
-const CourseDetailsPage = () => {
-  const { courseName } = useParams(); // URL থেকে কোর্সের নাম নিবে
-  const navigate = useNavigate();
-  const [questions, setQuestions] = useState([]);
+const CourseQuestionsPage = () => {
+  const [courses, setCourses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const teacherEmail = sessionStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:5142/api/questions/${teacherEmail}`)
@@ -20,20 +19,8 @@ const CourseDetailsPage = () => {
   }, [courseName, teacherEmail]);
 
   return (
-    <div className='flex min-h-screen bg-[#f8fafc]'>
-      <Sidebar />
-      <main className='flex-1 ml-64 p-10'>
-        {/* Header */}
-        <div className='flex items-center gap-4 mb-8'>
-          <button onClick={() => navigate(-1)} className='p-2 hover:bg-slate-200 rounded-full transition-colors'>
-            <ArrowLeft size={24} />
-          </button>
-          <div>
-            <h1 className='text-3xl font-black text-slate-800 uppercase'>{decodeURIComponent(courseName)}</h1>
-            <p className='text-slate-500'>Showing all questions for this course</p>
-          </div>
-        </div>
 
+    
         {/* Questions List */}
         <div className='space-y-6'>
           {questions.length > 0 ? (
@@ -52,6 +39,20 @@ const CourseDetailsPage = () => {
                     </span>
                   </div>
                 </div>
+    <div className='flex min-h-screen bg-[#f8fafc]'>
+      <Sidebar />
+      <main className='flex-1 ml-64 p-10'>
+        {/* Header */}
+        <div className='flex items-center gap-4 mb-8'>
+          <button onClick={() => navigate(-1)} className='p-2 hover:bg-slate-200 rounded-full transition-colors'>
+            <ArrowLeft size={24} />
+          </button>
+          <div>
+            <h1 className='text-3xl font-black text-slate-800 uppercase'>{decodeURIComponent(courseName)}</h1>
+            <p className='text-slate-500'>Showing all questions for this course</p>
+          </div>
+        </div>
+
 
                 <h2 className='text-xl font-bold text-slate-800 mb-8'>{q.text}</h2>
 
@@ -76,6 +77,26 @@ const CourseDetailsPage = () => {
                 </div>
               </div>
             ))
+
+            
+        {/* Questions List */}
+        <div className='space-y-6'>
+          {questions.length > 0 ? (
+            questions.map((q, idx) => (
+              <div key={q.id} className='bg-white border border-slate-200 rounded-2xl p-8 shadow-sm'>
+                <div className='flex justify-between items-start mb-6'>
+                  <div className='text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full'>
+                    Question {idx + 1} • Multiple Choice
+                  </div>
+                  <div className='flex gap-4 text-slate-400 text-sm font-bold'>
+                    <span className='flex items-center gap-1'>
+                      <Clock size={14} /> 30s
+                    </span>
+                    <span className='flex items-center gap-1'>
+                      <Star size={14} /> 1pt
+                    </span>
+                  </div>
+                </div>
           ) : (
             <div className='text-center py-20 bg-white rounded-2xl border border-dashed'>
               <p className='text-slate-400'>No questions found for this course.</p>
