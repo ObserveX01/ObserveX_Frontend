@@ -18,35 +18,36 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  // sessionStorage থেকে ইউজার রোল নেওয়া হচ্ছে (মাল্টি-ট্যাব সাপোর্টের জন্য)
-  const userRole = sessionStorage.getItem("userRole");
+   const handleLogoClick = () => {
+     if (userRole === "Admin") {
+       navigate("/results-database");
+     } else if (userRole === "Teacher") {
+       // টিচারদের জন্য এখন "Course Question" পেজে নিয়ে যাবে
+       navigate("/course-questions");
+     } else {
+       // স্টুডেন্টদের জন্য ডিফল্ট ড্যাশবোর্ড
+       navigate("/dashboard");
+       const navigate = useNavigate();
+       const location = useLocation();
 
-  /**
-   * Logout Logic
-   */
-  const handleLogout = () => {
-    sessionStorage.clear();
-    navigate("/", { replace: true });
-  };
+       // sessionStorage থেকে ইউজার রোল নেওয়া হচ্ছে (মাল্টি-ট্যাব সাপোর্টের জন্য)
+       const userRole = sessionStorage.getItem("userRole");
 
-  /**
-   * Logo Click Logic
-   * রোল অনুযায়ী নির্দিষ্ট হোমপেজে রিডাইরেক্ট করা
-   */
-  const handleLogoClick = () => {
-    if (userRole === "Admin") {
-      navigate("/results-database");
-    } else if (userRole === "Teacher") {
-      // টিচারদের জন্য এখন "Course Question" পেজে নিয়ে যাবে
-      navigate("/course-questions");
-    } else {
-      // স্টুডেন্টদের জন্য ডিফল্ট ড্যাশবোর্ড
-      navigate("/dashboard");
-    }
-  };
+       /**
+        * Logout Logic
+        */
+       const handleLogout = () => {
+         sessionStorage.clear();
+         navigate("/", { replace: true });
+       };
+
+       /**
+        * Logo Click Logic
+        * রোল অনুযায়ী নির্দিষ্ট হোমপেজে রিডাইরেক্ট করা
+        */
+     }
+   };
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full shadow-sm z-50">
