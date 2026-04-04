@@ -3,11 +3,6 @@ import { ShieldCheck, AlertCircle, ChevronDown, Loader2 } from "lucide-react"; /
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
-
-/ State for handling logic
-  const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // For button state
-  const [showSuccessLoader, setShowSuccessLoader] = useState(false); // For final transition
 const SignupPage = () => {
   const navigate = useNavigate();
 
@@ -18,7 +13,10 @@ const SignupPage = () => {
   const [role, setRole] = useState("");
   const [agreed, setAgreed] = useState(false);
 
-  /
+  // State for handling logic
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // For button state
+  const [showSuccessLoader, setShowSuccessLoader] = useState(false); // For final transition
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -28,16 +26,19 @@ const SignupPage = () => {
       return;
     }
 
-    
+    const phoneRegex = /^01\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      setError("Phone number must start with 01 and be exactly 11 digits long.");
+      return;
+    }
+
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
     }
 
-    
-const phoneRegex = /^01\d{9}$/;
-    if (!phoneRegex.test(phone)) {
-      setError("Phone number must start with 01 and be exactly 11 digits long.");
+    if (!agreed) {
+      setError("You must agree to the Terms & Conditions and Privacy Policy.");
       return;
     }
 

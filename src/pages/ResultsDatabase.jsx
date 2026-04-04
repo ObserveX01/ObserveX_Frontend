@@ -29,15 +29,6 @@ const ResultsDatabase = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTeacher, setSelectedTeacher] = useState(null); // ক্লিক করা টিচারের জন্য স্টেট
 
-   }
-            teacherStats[r.teacherName].totalScore +=
-              r.percentage || r.Percentage || 0;
-            teacherStats[r.teacherName].count += 1;
-            teacherStats[r.teacherName].students.add(
-              r.studentEmail || r.StudentEmail,
-            );
-            tea
-
   useEffect(() => {
     // --- ১. ডাটা ফেচ এবং গার্বেজ ফিল্টারিং লজিক (আপডেটেড) ---
     fetch("http://localhost:5142/api/results/all")

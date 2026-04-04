@@ -3,18 +3,11 @@ import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { ClipboardCheck, Search, User, Book, Calendar, ChevronRight, GraduationCap } from "lucide-react";
 
-const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate()
-   const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
-    const [agreed, setAgreed] = useState(false);
-
 const StudentResults = () => {
   const [results, setResults] = useState([]);
-  ;
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const teacherEmail = sessionStorage.getItem("userEmail");
@@ -39,7 +32,21 @@ const StudentResults = () => {
   );
 
   return (
-    
+    <div className='flex min-h-screen bg-[#f8fafc] font-sans'>
+      <Sidebar />
+      <main className='flex-1 ml-64 p-10'>
+        <div className='max-w-6xl mx-auto'>
+          {/* Header */}
+          <div className='flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10'>
+            <div>
+              <div className='flex items-center gap-3 mb-2'>
+                <div className='bg-emerald-500 p-2 rounded-lg text-white'>
+                  <ClipboardCheck size={24} />
+                </div>
+                <h1 className='text-3xl font-black text-slate-800 uppercase tracking-tight'>Student Results</h1>
+              </div>
+              <p className='text-slate-500 font-medium'>Monitor your students' exam submissions and performance</p>
+            </div>
 
             {/* Search Bar */}
             <div className='relative w-full md:w-80'>
@@ -75,22 +82,6 @@ const StudentResults = () => {
                       Action
                     </th>
                   </tr>
-
-                  <div className='flex min-h-screen bg-[#f8fafc] font-sans'>
-      <Sidebar />
-      <main className='flex-1 ml-64 p-10'>
-        <div className='max-w-6xl mx-auto'>
-          {/* Header */}
-          <div className='flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10'>
-            <div>
-              <div className='flex items-center gap-3 mb-2'>
-                <div className='bg-emerald-500 p-2 rounded-lg text-white'>
-                  <ClipboardCheck size={24} />
-                </div>
-                <h1 className='text-3xl font-black text-slate-800 uppercase tracking-tight'>Student Results</h1>
-              </div>
-              <p className='text-slate-500 font-medium'>Monitor your students' exam submissions and performance</p>
-            </div>
                 </thead>
                 <tbody className='divide-y divide-slate-50'>
                   {filteredResults.map((item) => (
